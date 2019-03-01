@@ -8,10 +8,17 @@
 
 #ifndef SIM808_H_
 #define SIM808_H_
+#define SIM808_NUMBER	89460850127004686343
+
 #include <avr/io.h>
 #include "uart1.h"
 void sim808_ok(void);
+int sim808_initialize(void);
 
-
+//added functions
+void sim808_command(char[]);
+int sim808_check_network(void);
+char[] sim808_get_answer(void);
+int sim808_send_sms(char[] sms, long sim_number);
 
 #endif /* SIM808_H_ */
