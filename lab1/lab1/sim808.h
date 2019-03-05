@@ -16,9 +16,11 @@ void sim808_ok(void);
 int sim808_initialize(void);
 
 //added functions
-void sim808_command(char[]);
+void sim808_command(char*);
 int sim808_check_network(void);
-char[] sim808_get_answer(void);
-int sim808_send_sms(char[] sms, long sim_number);
+char* sim808_get_answer(void);
+int sim808_send_sms(char *sms, long sim_number);
+
+extern char ok[4];
 
 #endif /* SIM808_H_ */

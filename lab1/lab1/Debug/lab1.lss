@@ -7,7 +7,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         0000026e  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000005  00800100  00800100  000002e2  2**0
+  2 .bss          00000009  00800100  00800100  000002e2  2**0
                   ALLOC
   3 .comment      00000030  00000000  00000000  000002e2  2**0
                   CONTENTS, READONLY
@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000000d0  00000000  00000000  00000354  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000c57  00000000  00000000  00000424  2**0
+  6 .debug_info   00000c86  00000000  00000000  00000424  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000991  00000000  00000000  0000107b  2**0
+  7 .debug_abbrev 000009b4  00000000  00000000  000010aa  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000595  00000000  00000000  00001a0c  2**0
+  8 .debug_line   00000598  00000000  00000000  00001a5e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000001ec  00000000  00000000  00001fa4  2**2
+  9 .debug_frame  000001ec  00000000  00000000  00001ff8  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000004c5  00000000  00000000  00002190  2**0
+ 10 .debug_str    000004e6  00000000  00000000  000021e4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000261  00000000  00000000  00002655  2**0
+ 11 .debug_loc    00000261  00000000  00000000  000026ca  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000080  00000000  00000000  000028b6  2**0
+ 12 .debug_ranges 00000080  00000000  00000000  0000292b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -122,7 +122,7 @@ Disassembly of section .text:
   a0:	1d 92       	st	X+, r1
 
 000000a2 <.do_clear_bss_start>:
-  a2:	a5 30       	cpi	r26, 0x05	; 5
+  a2:	a9 30       	cpi	r26, 0x09	; 9
   a4:	b2 07       	cpc	r27, r18
   a6:	e1 f7       	brne	.-8      	; 0xa0 <.do_clear_bss_loop>
   a8:	30 d0       	rcall	.+96     	; 0x10a <main>
@@ -143,11 +143,11 @@ void adc_init(){
   b2:	80 81       	ld	r24, Z
   b4:	8f 68       	ori	r24, 0x8F	; 143
   b6:	80 83       	st	Z, r24
-	ADMUX |= (1<<REFS0);
+	ADMUX |= (1<<REFS0)|(1 << MUX1); //MUX1 is for the Z axis, MUX0 for the Y axis and remove |(1 << MUX1) for the X axis
   b8:	ec e7       	ldi	r30, 0x7C	; 124
   ba:	f0 e0       	ldi	r31, 0x00	; 0
   bc:	80 81       	ld	r24, Z
-  be:	80 64       	ori	r24, 0x40	; 64
+  be:	82 64       	ori	r24, 0x42	; 66
   c0:	80 83       	st	Z, r24
   c2:	08 95       	ret
 
@@ -163,9 +163,9 @@ void adc_start_conversion(){
   ce:	08 95       	ret
 
 000000d0 <sim808_ok>:
- *  Author: lucas
- */ 
-#include "sim808.h"
+#include <string.h>
+
+
 
 void sim808_ok() {
 	usart1_transmit('A');
@@ -219,8 +219,8 @@ void usart0_transmit(char data) {
  108:	08 95       	ret
 
 0000010a <main>:
-volatile uint16_t adc_result;
 uint8_t button2;
+char ok[4];
 
 int main(void)
 {

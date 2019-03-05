@@ -17,6 +17,7 @@ volatile uint8_t data0;
 volatile uint8_t data1;
 volatile uint16_t adc_result;
 uint8_t button2;
+char ok[4];
 
 int main(void)
 {
@@ -36,6 +37,13 @@ int main(void)
 			PORTB^=(1<<PORTB3);
 			sim808_ok();
 		} 
+		//test the accelerometer
+		//usart0_transmit(ADC >> 2);
+		//usart0_transmit(0xD);
+		//usart0_transmit(0xA);
+		//_delay_ms(50);
+		
+		
 		////usart0_transmit('F');
 		//usart0_transmit(adc_result >> 2);
 		//usart0_transmit(0xA);

@@ -12,6 +12,7 @@ data1               0x1               main.o
 adc_result          0x2               main.o
 button2             0x1               main.o
 data0               0x1               main.o
+ok                  0x4               main.o
 
 Discarded input sections
 
@@ -355,25 +356,26 @@ END GROUP
                 0x00800100                _edata = .
                 [!provide]                PROVIDE (__data_end, .)
 
-.bss            0x00800100        0x5
+.bss            0x00800100        0x9
                 0x00800100                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800100        0x5 main.o
+ COMMON         0x00800100        0x9 main.o
                 0x00800100                data1
                 0x00800101                adc_result
                 0x00800103                button2
                 0x00800104                data0
-                0x00800105                PROVIDE (__bss_end, .)
+                0x00800105                ok
+                0x00800109                PROVIDE (__bss_end, .)
                 0x0000026e                __data_load_start = LOADADDR (.data)
                 0x0000026e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800105        0x0
+.noinit         0x00800109        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800105                _end = .
+                0x00800109                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -458,32 +460,32 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0xc57
+.debug_info     0x00000000      0xc86
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x792 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_info    0x00000792       0x99 adc.o
  .debug_info    0x0000082b       0xd4 sim808.o
  .debug_info    0x000008ff       0xbd uart0.o
- .debug_info    0x000009bc      0x1de main.o
- .debug_info    0x00000b9a       0xbd uart1.o
+ .debug_info    0x000009bc      0x20d main.o
+ .debug_info    0x00000bc9       0xbd uart1.o
 
-.debug_abbrev   0x00000000      0x991
+.debug_abbrev   0x00000000      0x9b4
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x729 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_abbrev  0x00000729       0x51 adc.o
  .debug_abbrev  0x0000077a       0x7c sim808.o
  .debug_abbrev  0x000007f6       0x7a uart0.o
- .debug_abbrev  0x00000870       0xa7 main.o
- .debug_abbrev  0x00000917       0x7a uart1.o
+ .debug_abbrev  0x00000870       0xca main.o
+ .debug_abbrev  0x0000093a       0x7a uart1.o
 
-.debug_line     0x00000000      0x595
+.debug_line     0x00000000      0x598
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x169 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_line    0x00000169       0xba adc.o
- .debug_line    0x00000223       0x5c sim808.o
- .debug_line    0x0000027f       0xd0 uart0.o
- .debug_line    0x0000034f      0x176 main.o
- .debug_line    0x000004c5       0xd0 uart1.o
+ .debug_line    0x00000223       0x5e sim808.o
+ .debug_line    0x00000281       0xd0 uart0.o
+ .debug_line    0x00000351      0x177 main.o
+ .debug_line    0x000004c8       0xd0 uart1.o
 
 .debug_frame    0x00000000      0x1ec
  *(.debug_frame)
@@ -493,19 +495,19 @@ END GROUP
  .debug_frame   0x0000008c      0x12c main.o
  .debug_frame   0x000001b8       0x34 uart1.o
 
-.debug_str      0x00000000      0x4c5
+.debug_str      0x00000000      0x4e6
  *(.debug_str)
  .debug_str     0x00000000      0x296 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
- .debug_str     0x00000296      0x163 adc.o
-                                0x197 (size before relaxing)
- .debug_str     0x000003f9       0x28 sim808.o
-                                0x18e (size before relaxing)
- .debug_str     0x00000421       0x37 uart0.o
-                                0x1aa (size before relaxing)
- .debug_str     0x00000458       0x60 main.o
-                                0x22b (size before relaxing)
- .debug_str     0x000004b8        0xd uart1.o
-                                0x1aa (size before relaxing)
+ .debug_str     0x00000296      0x17b adc.o
+                                0x1af (size before relaxing)
+ .debug_str     0x00000411       0x28 sim808.o
+                                0x1a6 (size before relaxing)
+ .debug_str     0x00000439       0x37 uart0.o
+                                0x1c2 (size before relaxing)
+ .debug_str     0x00000470       0x69 main.o
+                                0x251 (size before relaxing)
+ .debug_str     0x000004d9        0xd uart1.o
+                                0x1c2 (size before relaxing)
 
 .debug_loc      0x00000000      0x261
  *(.debug_loc)
