@@ -36,7 +36,7 @@ void sim808_command(char[] command){  //calling this function will result in sen
 char[] sim808_get_answer(){} // will return the answer of the sim808
 int sim808_check_network(){  //returns 1 if the signal is strong enough, 0 otherwise
 	sim808_command("AT+CSQ");
-	/*if (int(sim808_get_answer())>5){
+	/*if (int(sim808_get_answer())>3.5){
 		return(1);}
 	return(0) */
 	
@@ -44,7 +44,7 @@ int sim808_check_network(){  //returns 1 if the signal is strong enough, 0 other
 int sim808_send_sms(char[] sms, long sim_number){
 	sim808_command("AT+CMGF=1"); //the command which set the sim to TEXT mode not PDU (data) mode. You must do this because otherwise you cannot
 	                             //just type out the message.
-	sim808_command("AT+CMGS=conversiontochar[](sim_number)"); //send a text message! You will get a '>' prompt for typing. Type out your message and when you are done send a [Control-Z] on an empty line to send
+	sim808_command("AT+CMGS="+conversiontochartable(sim_number)); //send a text message! You will get a '>' prompt for typing. Type out your message and when you are done send a [Control-Z] on an empty line to send
 	// the message has to be written in the '>' prompt... How ?
 
 }
