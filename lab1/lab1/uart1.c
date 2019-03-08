@@ -20,3 +20,14 @@ void usart1_transmit(char data) {
 	/* Put data into buffer, sends the data */
 	UDR1 = data;
 }
+
+char usart1_get_UDR() {
+	char data;
+	/* Wait for full received buffer */
+	while ( UCSR1A & (1<<UDRE1));
+	
+	/* Put UDR1 into data, show the data */
+	data=UDR1;
+	return (data);
+}
+

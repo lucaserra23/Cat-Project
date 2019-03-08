@@ -6,6 +6,8 @@
  */ 
 #define F_CPU	16000000UL
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "uart0.h"
@@ -16,8 +18,10 @@
 volatile uint8_t data0;
 volatile uint8_t data1;
 volatile uint16_t adc_result;
-uint8_t button2;
+uint8_t button2, button2_old;
 char ok[4];
+char data;
+int result_acceleration;
 
 int main(void)
 {
@@ -29,19 +33,26 @@ int main(void)
 	sei();			// Enables global interrupts => CPU will listen to IO devices interrupt requests
 	//cli();		// Disable -||-
 	adc_start_conversion();
+	//sim808_send_sms("Warning! Abnormal acceleration!", "0046706141167");
     while (1) 
     {	
-		button2 = PINC & (1 << PINC7);
-		
-		if (button2>0){
-			PORTB^=(1<<PORTB3);
-			sim808_ok();
-		} 
+		//button2 = PINC & (1 << PINC7);
+		//
+		//if (button2>button2_old){
+			//PORTB^=(1<<PORTB3);
+			//sim808_ok();
+		//} 
+		//
+		//button2_old = button2;
 		//test the accelerometer
-		//usart0_transmit(ADC >> 2);
+		//usart0_transmit(big_acceleration(ADC >> 2));
 		//usart0_transmit(0xD);
 		//usart0_transmit(0xA);
-		//_delay_ms(50);
+		if(big_acceleration(ADC>>2) == '1'){
+			sim808_send_sms("Warning! Abnormal acceleration!", "0046706141167");
+		}
+		_delay_ms(200);
+		
 		
 		
 		////usart0_transmit('F');

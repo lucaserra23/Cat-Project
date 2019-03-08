@@ -12,7 +12,7 @@
 #include <avr/io.h>
 void usart1_init(void);
 void usart1_transmit(char);
-
+char usart1_get_UDR();
 
 
 #endif /* UART1_H_ */

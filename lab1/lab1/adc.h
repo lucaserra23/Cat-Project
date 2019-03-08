@@ -12,6 +12,7 @@
 #include <avr/io.h>
 void adc_start_conversion(void);
 void adc_init(void);
+char big_acceleration(char);
 
 
 #endif /* ADC_H_ */
