@@ -33,39 +33,19 @@ int main(void)
 	sei();			// Enables global interrupts => CPU will listen to IO devices interrupt requests
 	//cli();		// Disable -||-
 	adc_start_conversion();
-	//sim808_send_sms("Warning! Abnormal acceleration!", "0046706141167");
+	
     while (1) 
     {	
-		//button2 = PINC & (1 << PINC7);
-		//
-		//if (button2>button2_old){
-			//PORTB^=(1<<PORTB3);
-			//sim808_ok();
-		//} 
-		//
-		//button2_old = button2;
-		//test the accelerometer
-		//usart0_transmit(big_acceleration(ADC >> 2));
-		//usart0_transmit(0xD);
-		//usart0_transmit(0xA);
+		
+		/*
 		if(big_acceleration(ADC>>2) == '1'){
 			sim808_send_sms("Warning! Abnormal acceleration!", "0046706141167");
 		}
 		_delay_ms(200);
 		
+		*/
 		
-		
-		////usart0_transmit('F');
-		//usart0_transmit(adc_result >> 2);
-		//usart0_transmit(0xA);
-		//
-		//
-		//if (data == 't') {
-			//
-			//PORTB ^= (1 << DDRB5);
-			//data = 0;
-			//
-		//}
+	
 		
     }
 }

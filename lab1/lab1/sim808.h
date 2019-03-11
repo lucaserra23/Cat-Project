@@ -13,13 +13,10 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include "uart1.h"
-void sim808_ok(void);
-int sim808_initialize(void);
+void sim808_initialize(void);
 
 //added functions
 void sim808_command(char*);
-int sim808_check_network(void);
-char* sim808_get_answer(void);
 void sim808_send_sms(char *sms, char *tel_number);
 char* concat(const char*, const char*);
 
