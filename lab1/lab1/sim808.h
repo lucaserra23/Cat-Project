@@ -17,9 +17,16 @@ void sim808_initialize(void);
 
 //added functions
 void sim808_command(char*);
-void sim808_send_sms(char *sms, char *tel_number);
-char* concat(const char*, const char*);
+void sim808_command_yat(char*);
+void sim808_send_sms(char *, char *);
+void sim808_alert_yat(char*, char *);
+void sim808_send_gps_pos_request(void);
 
-extern char ok[4];
+char* concat(const char*, const char*);
+char* splice_array(char*, int, int);
+char* move_dot_array(char*);
+
+
+
 
 #endif /* SIM808_H_ */
