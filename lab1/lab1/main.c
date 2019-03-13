@@ -20,7 +20,7 @@ volatile uint8_t data1;
 volatile uint16_t adc_result;
 volatile char gps_msg[100];
 volatile int gps_request;
-volatile int index;
+volatile int pos;
 char data;
 int result_acceleration;
 
@@ -37,7 +37,7 @@ int main(void)
 	gps_request=0;
 	sim808_send_gps_pos_request();
 	gps_request=1; //gps_request =1 means the message returned by the SIM with the current location is not totally registered.
-	index=0;
+	pos=0;
 	
     while (1) 
     {	
@@ -50,16 +50,18 @@ int main(void)
 		
 		*/
 		if(gps_request == 0){
-			char* message0 = splice_array(gps_msg, 28, 38);
-			char* message1 = splice_array(gps_msg, 40, 50);
-			char* message = splice_array(gps_msg, 28, 50);
-			
-			char* message00 = move_dot_array(message0);
-			char* message10 = move_dot_array(message1);
-			sim808_send_alert_yat(message, "0046706141167");
+			char* gps_tmp = gps_msg;
+			char* message0 = splice_array(gps_tmp, 47, 56);
+			char* message1 = splice_array(gps_tmp, 57, 66);
+			char* message = splice_array(gps_tmp, 47, 66);
+			char* link = "http://maps.google.com/maps?q=loc:";
+			char* messageok = message;
+			char* message2=concat(link,messageok);
+
+			sim808_send_alert_yat(message2, "0046706141167");
 			gps_request = 1;
 		}
-		
+	
 	
 		
     }
@@ -83,12 +85,12 @@ ISR(USART1_RX_vect){
 	data1=UDR1;
 	usart0_transmit(data1);
 	if(gps_request==1){
-		gps_msg[index] = UDR1;
-		index++;
+		gps_msg[pos] = UDR1;
+		pos++;
 	}
-	if((UDR1 == 0xD) & (gps_msg[index-3]!= 0x3D) & (gps_msg[index-4]!= 0x3D)){ //here we end the message gps_msg if (we have <CR>) & (it is not the <CR> of the beginning of the answer of the SIM, which is AT+CGPSINFO=0<CR>) 
+	if((UDR1 == 0xD) && (gps_msg[pos-2]==0x2C)){ //here we end the message gps_msg if (we have <CR>) & (it is not the <CR> of the beginning of the answer of the SIM, which is AT+CGPSINFO=0<CR>) 
 		gps_request = 0;
-		index = 0;
+		pos = 0;
 	}
 }
 ISR(ADC_vect){
@@ -96,3 +98,4 @@ ISR(ADC_vect){
 	adc_start_conversion();
 	
 }
+//(!(0x40<gps_msg[index-2]<0x5B))&& (!(0x40<gps_msg[index-3]<0x5B))

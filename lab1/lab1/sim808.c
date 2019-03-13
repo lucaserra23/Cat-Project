@@ -5,6 +5,8 @@
  *  Author: lucas
  */ 
 #include "sim808.h"
+#include "uart0.h"
+#include "uart1.h"
 #include <string.h>
 #define F_CPU	16000000UL
 #include <util/delay.h>
@@ -59,26 +61,38 @@ void sim808_send_gps_pos_request(){
 	sim808_command("AT+CGPSPWR=1"); //Turning on the GPS
 	usart1_transmit(0xD);
 	_delay_ms(50);
-	sim808_command("AT+CGPSINF=0");
+	sim808_command("AT+CGNSSEQ=\"RMC\""); //setting the right format
 	usart1_transmit(0xD);
+	_delay_ms(50);
+	sim808_command("AT+CGNSINF"); //Reading
+	usart1_transmit(0xD);
+	
 
 }
 void sim808_send_alert_yat(char *gps_position, char* tel_number){
 	char* sms = "Warning! Abnormal acceleration detected at the following coordinates: ";
-	sim808_command_yat("AT+CMGF=1"); //the command which set the sim to TEXT mode not PDU (data) mode. You must do this because otherwise you cannot
+	sim808_command("AT+CMGF=1"); //the command which set the sim to TEXT mode not PDU (data) mode. You must do this because otherwise you cannot
 	//just type out the message.
-	usart0_transmit(0xD);  // <CR>
-	_delay_ms(50);
+	usart1_transmit(0xD);  // <CR>
+	_delay_ms(100);
 	char* quote = "\"";
 	char* beginning = "AT+CMGS=\"";
 	char *num1= concat(beginning, tel_number);
 	char *num2= concat(num1, quote);
-	sim808_command_yat(num2);
-	usart0_transmit(0xD);  // <CR>
-	char* final_message = concat(sms, gps_position);
-	sim808_command_yat(final_message);
-	usart0_transmit(0x1A); //CTRL+Z
-	usart0_transmit(0xD); // <CR>
+	sim808_command(num2);
+	usart1_transmit(0xD);  // <CR>
+	_delay_ms(100);
+	char* please = splice_array(gps_position,0,strlen(gps_position)-1);
+	char* final_message = concat(sms,please);
+	sim808_command(final_message);
+	usart1_transmit(0x1A); //CTRL+Z
+	usart1_transmit(0x1A); //CTRL+Z
+	usart1_transmit(0x1A); //CTRL+Z
+	usart1_transmit(0x1A); //CTRL+Z
+	//_delay_ms(10);
+	usart1_transmit(0x0D); // <CR>
+	usart1_transmit(0x0D); // <CR>
+
 	
 	free(num1);
 	free(num2);
@@ -105,21 +119,12 @@ char* splice_array(char* array, int i, int j){
 }
 //returns the good format for the coordinates
 char* move_dot_array(char* array){
-	char* copy1 = malloc(sizeof(array));
-	int i;
-	for(i=0;i<sizeof(array);i++){
-		if(array[i]!= 0x2E){
-			copy1[i]=array[i];
-			}
-	}
-	char* copy2 = malloc(sizeof(array));	
-	copy2[0]=array[0];
-	copy2[1]=array[1];
-	copy2[2]=0x2E;
-	for(i=3;i<sizeof(array);i++){
-		copy2[i]=copy1[i];
-	}
-	return(copy1);
+	char* copy1=concat(splice_array(array, 0,2),0X2E); //xx.
+	char* copy2=concat(copy1,splice_array(array,3,5)); // xx.xx
+	char* copy3=concat(copy2,splice_array(array,5,10)); //xx.xxyyyyy
+	
+	return(copy3);
 	free(copy1);
 	free(copy2);
+	free(copy3);
 }

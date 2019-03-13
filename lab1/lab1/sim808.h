@@ -19,7 +19,7 @@ void sim808_initialize(void);
 void sim808_command(char*);
 void sim808_command_yat(char*);
 void sim808_send_sms(char *, char *);
-void sim808_alert_yat(char*, char *);
+void sim808_send_alert_yat(char*, char *);
 void sim808_send_gps_pos_request(void);
 
 char* concat(const char*, const char*);
