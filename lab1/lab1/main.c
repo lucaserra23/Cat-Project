@@ -32,7 +32,7 @@ int main(void)
 	usart1_init();
 	adc_init();
 	sei();			// Enables global interrupts => CPU will listen to IO devices interrupt requests
-	//cli();		// Disable -||-
+	//cli();		// Disable global interrupts
 	adc_start_conversion();
 	gps_request=0;
 	sim808_send_gps_pos_request();
@@ -40,38 +40,23 @@ int main(void)
 	pos=0;
 	
     while (1) 
-    {	
-		
-		/*
-		if(big_acceleration(ADC>>2) == '1'){
-			sim808_send_sms("Warning! Abnormal acceleration!", "0046706141167");
-		}
+    {			
+		if(big_acceleration(ADC>>2) == 0x30){ //Test if the accelerometer detects an acceleration. If yes, we send a message
+			if(gps_request == 0){
+				char* gps_tmp = gps_msg;
+				//char* message0 = splice_array(gps_tmp, 47, 56);
+				//char* message1 = splice_array(gps_tmp, 57, 66);
+				char* message = splice_array(gps_tmp, 47, 66);
+				char* link = "http://maps.google.com/maps?q=loc:";
+				char* messageok = message;
+				char* message2=concat(link,messageok);
+				sim808_send_alert_yat(message2, "0046721570368");
+				gps_request = 1;
+			}
 		_delay_ms(200);
-		
-		*/
-		if(gps_request == 0){
-			char* gps_tmp = gps_msg;
-			char* message0 = splice_array(gps_tmp, 47, 56);
-			char* message1 = splice_array(gps_tmp, 57, 66);
-			char* message = splice_array(gps_tmp, 47, 66);
-			char* link = "http://maps.google.com/maps?q=loc:";
-			char* messageok = message;
-			char* message2=concat(link,messageok);
-
-			sim808_send_alert_yat(message2, "0046706141167");
-			gps_request = 1;
 		}
-	
-	
-		
     }
-
 }
-
-
-
-
-
 
 ISR(USART0_RX_vect){
 	
@@ -88,7 +73,7 @@ ISR(USART1_RX_vect){
 		gps_msg[pos] = UDR1;
 		pos++;
 	}
-	if((UDR1 == 0xD) && (gps_msg[pos-2]==0x2C)){ //here we end the message gps_msg if (we have <CR>) & (it is not the <CR> of the beginning of the answer of the SIM, which is AT+CGPSINFO=0<CR>) 
+	if((UDR1 == 0xD) && (gps_msg[pos-2]==0x2C)){ //here we end the message gps_msg if we have <CR> and if this is the last <CR>
 		gps_request = 0;
 		pos = 0;
 	}
@@ -96,6 +81,4 @@ ISR(USART1_RX_vect){
 ISR(ADC_vect){
 	adc_result = ADC;
 	adc_start_conversion();
-	
 }
-//(!(0x40<gps_msg[index-2]<0x5B))&& (!(0x40<gps_msg[index-3]<0x5B))

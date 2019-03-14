@@ -5,6 +5,7 @@
  *  Author: lucas
  */ 
 #include "adc.h"
+#include "stdlib.h"
 
 void adc_init(){
 	ADCSRA |= (1<<ADEN)|(1<<ADIE)|(1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0);
@@ -15,7 +16,7 @@ char big_acceleration(char data){  // this function returns "1" if the detected 
 	if (abs((int)data-125)>4){
 		return (0x31);
 	}
-	return (0x30);
+	else return (0x30);
 }
 
 void adc_start_conversion(){
