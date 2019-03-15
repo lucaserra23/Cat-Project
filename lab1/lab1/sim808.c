@@ -57,6 +57,7 @@ void sim808_send_sms(char *sms, char* tel_number){ //This function allows to sen
 	usart1_transmit(0xD); // <CR>	These two commands allow to close the communication
 	
 }
+
 void sim808_send_gps_pos_request(){ //This function allows to have the coordinate of the GPS
 	sim808_command("AT+CGPSPWR=1"); //Turning on the GPS
 	usart1_transmit(0xD);
@@ -67,8 +68,8 @@ void sim808_send_gps_pos_request(){ //This function allows to have the coordinat
 	sim808_command("AT+CGNSINF"); //reading the coordinates
 	usart1_transmit(0xD);
 	
-
 }
+
 void sim808_send_alert_yat(char *gps_position, char* tel_number){ //This function sends the warning message to the phone
 	char* sms = "Warning! Abnormal acceleration detected at the following coordinates: ";
 	sim808_command("AT+CMGF=1"); //the command which set the sim to TEXT mode not PDU (data) mode. You must do this because otherwise you cannot
