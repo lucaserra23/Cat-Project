@@ -31,11 +31,6 @@ void sim808_command_yat(char *command){  //function used to make some tests with
 	}
 }
 
-void sim808_initialize(){ //initializes the SIM808 
-	sim808_command("AT"); //we send AT at the beginning of the connection 	
-	usart1_transmit(0xD); //then <CR>
-	
-}
 
 
 void sim808_send_sms(char *sms, char* tel_number){ //This function allows to send an sms to a phone
@@ -112,13 +107,4 @@ char* splice_array(char* array, int i, int j){
 	free(subset);
 }
 
-char* move_dot_array(char* array){ // This function returns the good format for the coordinates
-	char* copy1=concat(splice_array(array, 0,2),0X2E); //xx.
-	char* copy2=concat(copy1,splice_array(array,3,5)); // xx.xx
-	char* copy3=concat(copy2,splice_array(array,5,10)); //xx.xxyyyyy
-	
-	return(copy3);
-	free(copy1);
-	free(copy2);
-	free(copy3);
-}
+

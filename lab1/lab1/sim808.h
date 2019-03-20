@@ -13,9 +13,7 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include "uart1.h"
-void sim808_initialize(void);
 
-//added functions
 void sim808_command(char*);
 void sim808_command_yat(char*);
 void sim808_send_sms(char *, char *);
@@ -24,7 +22,7 @@ void sim808_send_gps_pos_request(void);
 
 char* concat(const char*, const char*);
 char* splice_array(char*, int, int);
-char* move_dot_array(char*);
+
 
 
 

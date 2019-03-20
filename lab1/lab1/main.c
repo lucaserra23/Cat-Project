@@ -26,13 +26,10 @@ int result_acceleration;
 
 int main(void)
 {
-    DDRB |= (1 << 3);   //DDRB3
-	DDRA &=~(1<< 2);  //DDRA2
 	usart0_init();
 	usart1_init();
 	adc_init();
 	sei();			// Enables global interrupts => CPU will listen to IO devices interrupt requests
-	//cli();		// Disable global interrupts
 	adc_start_conversion();
 	gps_request=0;
 	sim808_send_gps_pos_request();
@@ -42,11 +39,9 @@ int main(void)
     while (1) 
     {			
 		if(big_acceleration(ADC>>2) == 0x30){ //Test if the accelerometer detects an acceleration. If yes, we send a message
-			if(gps_request == 0){
-				char* gps_tmp = gps_msg;
-				//char* message0 = splice_array(gps_tmp, 47, 56);
-				//char* message1 = splice_array(gps_tmp, 57, 66);
-				char* message = splice_array(gps_tmp, 47, 66);
+			if(gps_request == 0){ //gps_request = 0 means the message returned by the SIM with the current location is totally registered.
+				char* gps_tmp = gps_msg; //we copy gps_msg in a non volatile variable
+				char* message = splice_array(gps_tmp, 47, 66);  //we only keep a certain portion of the message sent by the sim808
 				char* link = "http://maps.google.com/maps?q=loc:";
 				char* messageok = message;
 				char* message2=concat(link,messageok);
@@ -69,11 +64,12 @@ ISR(USART0_RX_vect){
 ISR(USART1_RX_vect){
 	data1=UDR1;
 	usart0_transmit(data1);
+	// registering the message sent by the sim808
 	if(gps_request==1){
 		gps_msg[pos] = UDR1;
 		pos++;
 	}
-	if((UDR1 == 0xD) && (gps_msg[pos-2]==0x2C)){ //here we end the message gps_msg if we have <CR> and if this is the last <CR>
+	if((UDR1 == 0xD) && (gps_msg[pos-2]==0x2C)){ //here we end the message gps_msg if the last character is <CR> and if the second to last character is a coma
 		gps_request = 0;
 		pos = 0;
 	}
