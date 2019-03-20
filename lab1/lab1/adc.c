@@ -12,13 +12,6 @@ void adc_init(){
 	ADMUX |= (1<<REFS0)|(1 << MUX0); //MUX1 is for the Z axis, MUX0 for the Y axis and remove |(1 << MUX1) for the X axis
 }
 
-char big_acceleration(char data){  // this function returns "1" if the detected acceleration is too important and "0" otherwise
-	if (abs((int)data-125)>4){
-		return (0x31);
-	}
-	else return (0x30);
-}
-
 void adc_start_conversion(){
 	ADCSRA |= (1<<ADSC);
 }
